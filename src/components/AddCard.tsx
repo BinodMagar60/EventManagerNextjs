@@ -11,7 +11,7 @@ import { useState } from "react"
 import { format } from "date-fns"
 
 
-const AddCard = () => {
+const AddCard = ({setAddOpen}: {setAddOpen: React.Dispatch<React.SetStateAction<boolean>>}) => {
   const [date, setDate] = useState<Date | undefined>(new Date());
 
   return (
@@ -23,7 +23,7 @@ const AddCard = () => {
             <div className="flex justify-between w-full">
               <div className="text-xl font-semibold">Create New Task</div>
               <div>
-                <Button variant="commonButton" size="sm" ><X /></Button>
+                <Button variant="commonButton" size="sm" onClick={()=>{setAddOpen(false)}}><X /></Button>
               </div>
             </div>
             <div className="space-y-4 mt-4">

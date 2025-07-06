@@ -7,7 +7,7 @@ import { useState } from "react";
 
 
 export default function Home() {
-  const [isAddOpen, setAddOpen] = useState(true)
+  const [isAddOpen, setAddOpen] = useState(false)
 
   return (
     <>
@@ -18,7 +18,7 @@ export default function Home() {
             <div className="text-gray-400">Welcome Back! Here's an overview of your tasks.</div>
           </div>
           <div>
-            <Button variant={"addnew"} size="lg"><span><Plus /></span><span>Add Task</span></Button>
+            <Button variant={"addnew"} size="lg" onClick={()=>setAddOpen(true)}><span><Plus /></span><span>Add Task</span></Button>
           </div>
         </div>
         {/* Top Part */}
@@ -67,7 +67,7 @@ export default function Home() {
       </div>
 
       {
-        // isAddOpen && <AddCard />
+        isAddOpen && <AddCard setAddOpen={setAddOpen}/>
       }
     </>
   );
