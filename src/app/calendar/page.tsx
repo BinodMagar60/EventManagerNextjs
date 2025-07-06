@@ -16,7 +16,7 @@ const page = () => {
       <div className="flex justify-between items-center mt-8">
         <div>
           <div className="text-3xl font-bold">Calendar</div>
-          <div className="text-gray-400">View and manage your tasks by date</div>
+          <div className="text-gray-400">View and manage your tasks by date.</div>
         </div>
         <div>
           <Button variant={"addnew"} size="lg"><span><Plus /></span><span>Add Task</span></Button>
@@ -44,6 +44,10 @@ const page = () => {
           <div className="mt-4"></div>
         </div>
       </div>
+      <div className="border border-[#1E293B] rounded-md p-5 w-full mt-3">
+          <div className="text-2xl font-semibold">Monthly Overview</div>
+          <div className="mt-4"></div>
+        </div>
     </div>
   )
 }

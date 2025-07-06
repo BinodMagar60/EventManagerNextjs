@@ -23,7 +23,8 @@ const buttonVariants = cva(
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
         link: "text-primary underline-offset-4 hover:underline",
         navigation: "text-gray-400 cursor-pointer hover:text-white  flex gap-1 border-0 focus:ring-0",
-        addnew: "bg-[#3576DF] text-[#020817] hover:bg-[#357FFF] cursor-pointer"
+        addnew: "bg-[#3576DF] text-[#020817] hover:bg-[#357FFF] cursor-pointer",
+        commonButton: "border border-[#1E293B] rounded-md bg-[#020817] hover:bg-[#1E293B] cursor-pointer"
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
