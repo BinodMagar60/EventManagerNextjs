@@ -32,7 +32,7 @@ export default function RootLayout({
           <div className="w-full">
             <Navbar/>
           </div>
-          <main className="container mx-auto text-white p-4">
+          <main className="text-white p-4 relative">
             {children}
           </main>
         </div>

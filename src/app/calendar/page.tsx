@@ -12,7 +12,7 @@ const page = () => {
   )
 
   return (
-    <div className="w-full">
+    <div className="container w-full mx-auto">
       <div className="flex justify-between items-center mt-8">
         <div>
           <div className="text-3xl font-bold">Calendar</div>

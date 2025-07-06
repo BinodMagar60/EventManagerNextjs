@@ -23,12 +23,6 @@ const navigationBarOptions =[
         href: "/tasks"
 
     },
-    {
-        name: "setting",
-        icons: <Settings/>,
-        href: "/setting"
-
-    },
 ]
 
 const Navbar = () => {
