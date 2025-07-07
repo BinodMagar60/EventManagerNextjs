@@ -1,18 +1,58 @@
 'use client'
 
-import { CalendarIcon, X } from "lucide-react"
+import { X } from "lucide-react"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
 import { Textarea } from "./ui/textarea"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
-import { Calendar } from "./ui/calendar"
-import { useState } from "react"
-import { format } from "date-fns"
+import { useEffect, useState } from "react"
+import Calendar22 from "./calendar-22"
+import { ITasks, useTaskContext } from "@/context/TaskContext"
+import { toast } from "sonner"
 
 
-const AddCard = ({setAddOpen}: {setAddOpen: React.Dispatch<React.SetStateAction<boolean>>}) => {
-  const [date, setDate] = useState<Date | undefined>(new Date());
+
+
+
+
+const AddCard = ({ setAddOpen }: { setAddOpen: React.Dispatch<React.SetStateAction<boolean>> }) => {
+  const { addTask } = useTaskContext()
+  const [date, setDate] = useState<string>(new Date().toISOString());
+  const [retrivedData, setRetrivedData] = useState<ITasks>()
+  const [newFormData, setNewFormData] = useState<ITasks>({
+    id: "",
+    title: null,
+    description: "",
+    category: "Personal",
+    priority: "Medium",
+    status: "Pending",
+    dueDate: date !== undefined ? new Date(date).toISOString() : new Date().toISOString(),
+    createdAt: undefined,
+    updatedAt: undefined,
+  })
+  useEffect(() => {
+    if (date) {
+      setNewFormData((prev) => ({
+        ...prev,
+        dueDate: date,
+      }));
+    }
+  }, [date]);
+
+  const createTask = () => {
+    if (newFormData.title === null || newFormData.title?.trim() === "") {
+      toast.error("Title is required", {
+        duration: 1300,
+      })
+      return
+    }
+    const response = addTask(newFormData)
+
+    if (response) {
+      setAddOpen(false)
+    }
+
+  }
 
   return (
 
@@ -23,14 +63,19 @@ const AddCard = ({setAddOpen}: {setAddOpen: React.Dispatch<React.SetStateAction<
             <div className="flex justify-between w-full">
               <div className="text-xl font-semibold">Create New Task</div>
               <div>
-                <Button variant="commonButton" size="sm" onClick={()=>{setAddOpen(false)}}><X /></Button>
+                <Button variant="commonButton" size="sm" onClick={() => { setAddOpen(false) }}><X /></Button>
               </div>
             </div>
             <div className="space-y-4 mt-4">
               <div className="space-y-2">
                 <div className="font-semibold">Title</div>
                 <div>
-                  <Input type="text" placeholder="Enter task title" className="placeholder:text-gray-400 border-[#1E293B]" />
+                  <Input type="text" placeholder="Enter task title" className="placeholder:text-gray-400 border-[#1E293B]" value={newFormData?.title || ""} onChange={(e) => {
+                    setNewFormData((prev) => ({
+                      ...prev,
+                      title: e.target.value
+                    }))
+                  }} />
                 </div>
               </div>
               <div className="space-y-2">
@@ -39,7 +84,7 @@ const AddCard = ({setAddOpen}: {setAddOpen: React.Dispatch<React.SetStateAction<
                   <Textarea placeholder="Enter task description (optional)" className="placeholder:text-gray-400 border-[#1E293B] max-h-28" style={{
                     resize: "none",
                     scrollbarWidth: "none"
-                  }} />
+                  }} onChange={(e) => { setNewFormData((prev) => ({ ...prev, description: e.target.value })) }} />
                 </div>
               </div>
               {/* category, priority, status */}
@@ -47,7 +92,9 @@ const AddCard = ({setAddOpen}: {setAddOpen: React.Dispatch<React.SetStateAction<
                 <div className="space-y-2">
                   <div className="font-semibold">Category</div>
                   <div>
-                    <Select defaultValue="Work" onValueChange={(val) => console.log(val)}>
+                    <Select defaultValue={newFormData.category} onValueChange={(value) =>
+                      setNewFormData((prev) => ({ ...prev, category: value as ITasks["category"] }))
+                    }>
                       <SelectTrigger className="w-full border border-[#1E293B] bg-[#020817] text-white rounded-md px-4 py-2">
                         <SelectValue placeholder="Select category" />
                       </SelectTrigger>
@@ -67,7 +114,7 @@ const AddCard = ({setAddOpen}: {setAddOpen: React.Dispatch<React.SetStateAction<
                 <div className="space-y-2">
                   <div className="font-semibold">Priority</div>
                   <div>
-                    <Select defaultValue="Medium" onValueChange={(val) => console.log(val)}>
+                    <Select defaultValue={newFormData.priority} onValueChange={(val) => setNewFormData((prev) => ({ ...prev, priority: val as ITasks['priority'] }))}>
                       <SelectTrigger className="w-full border border-[#1E293B] bg-[#020817] text-white rounded-md px-4 py-2">
                         <SelectValue placeholder="Select priority" />
                       </SelectTrigger>
@@ -84,7 +131,7 @@ const AddCard = ({setAddOpen}: {setAddOpen: React.Dispatch<React.SetStateAction<
                 <div className="space-y-2">
                   <div className="font-semibold">Status</div>
                   <div>
-                    <Select defaultValue="Pending" onValueChange={(val) => console.log(val)}>
+                    <Select defaultValue={newFormData.status} onValueChange={(val) => setNewFormData((prev) => ({ ...prev, status: val as ITasks['status'] }))}>
                       <SelectTrigger className="w-full border border-[#1E293B] bg-[#020817] text-white rounded-md px-4 py-2">
                         <SelectValue placeholder="Select status" />
                       </SelectTrigger>
@@ -102,45 +149,12 @@ const AddCard = ({setAddOpen}: {setAddOpen: React.Dispatch<React.SetStateAction<
               <div className="space-y-2">
                 <div className="font-semibold">Due Date</div>
                 <div>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className="bg-[#020817] text-white border border-[#1E293B] w-full justify-between font-normal"
-                      >
-                        {date ? format(date, "PPP") : "Pick a date"}
-                        <CalendarIcon className="h-4 w-4 opacity-50" />
-                      </Button>
-                    </PopoverTrigger>
-
-                    <PopoverContent
-                      className="w-auto p-0 bg-[#0F172A] border border-[#1E293B]"
-                      align="start"
-                    >
-                      <Calendar
-                        mode="single"
-                        selected={date}
-                        onSelect={(selectedDate) => {
-                          if (!selectedDate) return;
-                          if (date?.toDateString() !== selectedDate.toDateString()) {
-                            setDate(selectedDate);
-                          }
-                        }}
-                        defaultMonth={date ?? new Date()}
-                        disabled={(date) =>
-                          date < new Date(new Date().setHours(0, 0, 0, 0))
-                        }
-                        captionLayout="dropdown"
-                        className="text-white rounded-md p-2"
-                      />
-                    </PopoverContent>
-                  </Popover>
-
+                  <Calendar22 date={date} setDate={setDate} />
                 </div>
               </div>
             </div>
             <div className="w-full flex justify-end mt-4">
-              <Button variant="addnew">Create Task</Button>
+              <Button variant="addnew" onClick={() => createTask()}>Create Task</Button>
             </div>
           </div>
         </div>

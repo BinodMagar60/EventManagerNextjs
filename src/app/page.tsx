@@ -2,12 +2,19 @@
 
 import AddCard from "@/components/AddCard";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, CheckCircle, Clock, Plus, TrendingUp } from "lucide-react";
-import { useState } from "react";
+import { AlertTriangle, Check, CheckCircle, Clock, Edit, Ellipsis, Plus, Trash2, TrendingUp } from "lucide-react";
+import { useMemo, useState } from "react";
+import { useTaskContext } from "@/context/TaskContext";
+import Card from "@/components/Card";
 
 
 export default function Home() {
   const [isAddOpen, setAddOpen] = useState(false)
+  
+  const { tasks } = useTaskContext()
+  const allTasks = useMemo(() => tasks, [tasks])
+
+  const upcomingTasks = ([...allTasks].sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())).filter(item => item.status !== "Completed");
 
   return (
     <>
@@ -18,7 +25,7 @@ export default function Home() {
             <div className="text-gray-400">Welcome Back! Here's an overview of your tasks.</div>
           </div>
           <div>
-            <Button variant={"addnew"} size="lg" onClick={()=>setAddOpen(true)}><span><Plus /></span><span>Add Task</span></Button>
+            <Button variant={"addnew"} size="lg" onClick={() => setAddOpen(true)}><span><Plus /></span><span>Add Task</span></Button>
           </div>
         </div>
         {/* Top Part */}
@@ -60,14 +67,18 @@ export default function Home() {
         {/* upcoming task */}
         <div className="border border-[#1E293B] rounded-md p-5 mt-4 mb-3">
           <div className="text-2xl font-semibold">Upcoming Tasks</div>
-          <div className="min-h-40 mt-4"></div>
+          <div className="min-h-40 mt-4 space-y-3">
+            {
+              upcomingTasks.slice(0, 5).map(item => (
+                <Card key={item.id} item={item}/>
+              ))
+            }
+          </div>
         </div>
-
-
       </div>
 
       {
-        isAddOpen && <AddCard setAddOpen={setAddOpen}/>
+        isAddOpen && <AddCard setAddOpen={setAddOpen} />
       }
     </>
   );
