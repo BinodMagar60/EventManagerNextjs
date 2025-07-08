@@ -42,7 +42,7 @@ const EditCard = ({ taskDetail, setEditOpen }: { taskDetail: ITasks | null, setE
         setNewFormData(taskDetail)
         setDate(taskDetail.dueDate)
     }
-  },[])
+  },[taskDetail])
 
   const updatedTask = () => {
     if (newFormData.title === null || newFormData.title?.trim() === "") {

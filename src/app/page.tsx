@@ -2,7 +2,7 @@
 
 import AddCard from "@/components/AddCard";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, Check, CheckCircle, Clock, Edit, Ellipsis, Plus, Trash2, TrendingUp } from "lucide-react";
+import { AlertTriangle, CheckCircle, Clock, Plus, TrendingUp } from "lucide-react";
 import { useMemo, useState } from "react";
 import { ITasks, useTaskContext } from "@/context/TaskContext";
 import Card from "@/components/Card";
@@ -125,7 +125,7 @@ export default function Home() {
         <div className="flex justify-between items-center mt-8">
           <div>
             <div className="text-3xl font-bold">Dashboard</div>
-            <div className="text-gray-400">Welcome Back! Here's an overview of your tasks.</div>
+            <div className="text-gray-400">Welcome Back! Here&apos;s an overview of your tasks.</div>
           </div>
           <div>
             <Button variant={"addnew"} size="lg" onClick={() => setAddOpen(true)}><span><Plus /></span><span>Add Task</span></Button>

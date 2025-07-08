@@ -1,6 +1,6 @@
 "use client"
 
-import { Calendar, Home, ListTodo, Settings } from "lucide-react"
+import { Calendar, Home, ListTodo } from "lucide-react"
 import { Button } from "./ui/button"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
