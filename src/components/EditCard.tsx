@@ -15,12 +15,12 @@ import { toast } from "sonner"
 
 
 
-const AddCard = ({ setAddOpen }: { setAddOpen: React.Dispatch<React.SetStateAction<boolean>> }) => {
-  const { addTask } = useTaskContext()
+const EditCard = ({ taskDetail, setEditOpen }: { taskDetail: ITasks | null, setEditOpen: React.Dispatch<React.SetStateAction<boolean>> }) => {
+  const { updateTask } = useTaskContext()
   const [date, setDate] = useState<string>(new Date().toISOString())
   const [newFormData, setNewFormData] = useState<ITasks>({
     id: "",
-    title: "",
+    title: null,
     description: "",
     category: "Personal",
     priority: "Medium",
@@ -37,18 +37,24 @@ const AddCard = ({ setAddOpen }: { setAddOpen: React.Dispatch<React.SetStateActi
       }));
     }
   }, [date]);
+  useEffect(()=> {
+    if(taskDetail !== null){
+        setNewFormData(taskDetail)
+        setDate(taskDetail.dueDate)
+    }
+  },[])
 
-  const createTask = () => {
+  const updatedTask = () => {
     if (newFormData.title === null || newFormData.title?.trim() === "") {
       toast.error("Title is required", {
         duration: 1300,
       })
       return
     }
-    const response = addTask(newFormData)
+    const response = updateTask(newFormData)
 
     if (response) {
-      setAddOpen(false)
+      setEditOpen(false)
     }
 
   }
@@ -60,9 +66,9 @@ const AddCard = ({ setAddOpen }: { setAddOpen: React.Dispatch<React.SetStateActi
         <div className="w-full max-w-[720px] mx-auto">
           <div className="bg-[#020817] border border-[#1E293B] rounded-md p-5 w-full">
             <div className="flex justify-between w-full">
-              <div className="text-xl font-semibold">Create New Task</div>
+              <div className="text-xl font-semibold">Edit Task</div>
               <div>
-                <Button variant="commonButton" size="sm" onClick={() => { setAddOpen(false) }}><X /></Button>
+                <Button variant="commonButton" size="sm" onClick={() => {setEditOpen(false) }}><X /></Button>
               </div>
             </div>
             <div className="space-y-4 mt-4">
@@ -80,7 +86,7 @@ const AddCard = ({ setAddOpen }: { setAddOpen: React.Dispatch<React.SetStateActi
               <div className="space-y-2">
                 <div className="font-semibold">Description</div>
                 <div>
-                  <Textarea placeholder="Enter task description (optional)" className="placeholder:text-gray-400 border-[#1E293B] max-h-28" style={{
+                  <Textarea placeholder="Enter task description (optional)" value={newFormData.description} className="placeholder:text-gray-400 border-[#1E293B] max-h-28" style={{
                     resize: "none",
                     scrollbarWidth: "none"
                   }} onChange={(e) => { setNewFormData((prev) => ({ ...prev, description: e.target.value })) }} />
@@ -91,7 +97,7 @@ const AddCard = ({ setAddOpen }: { setAddOpen: React.Dispatch<React.SetStateActi
                 <div className="space-y-2">
                   <div className="font-semibold">Category</div>
                   <div>
-                    <Select defaultValue={newFormData.category} onValueChange={(value) =>
+                    <Select defaultValue={newFormData.category} value={newFormData.category} onValueChange={(value) =>
                       setNewFormData((prev) => ({ ...prev, category: value as ITasks["category"] }))
                     }>
                       <SelectTrigger className="w-full border border-[#1E293B] bg-[#020817] text-white rounded-md px-4 py-2">
@@ -113,7 +119,7 @@ const AddCard = ({ setAddOpen }: { setAddOpen: React.Dispatch<React.SetStateActi
                 <div className="space-y-2">
                   <div className="font-semibold">Priority</div>
                   <div>
-                    <Select defaultValue={newFormData.priority} onValueChange={(val) => setNewFormData((prev) => ({ ...prev, priority: val as ITasks['priority'] }))}>
+                    <Select defaultValue={newFormData.priority} value={newFormData.priority} onValueChange={(val) => setNewFormData((prev) => ({ ...prev, priority: val as ITasks['priority'] }))}>
                       <SelectTrigger className="w-full border border-[#1E293B] bg-[#020817] text-white rounded-md px-4 py-2">
                         <SelectValue placeholder="Select priority" />
                       </SelectTrigger>
@@ -130,7 +136,7 @@ const AddCard = ({ setAddOpen }: { setAddOpen: React.Dispatch<React.SetStateActi
                 <div className="space-y-2">
                   <div className="font-semibold">Status</div>
                   <div>
-                    <Select defaultValue={newFormData.status} onValueChange={(val) => setNewFormData((prev) => ({ ...prev, status: val as ITasks['status'] }))}>
+                    <Select defaultValue={newFormData.status} value={newFormData.status} onValueChange={(val) => setNewFormData((prev) => ({ ...prev, status: val as ITasks['status'] }))}>
                       <SelectTrigger className="w-full border border-[#1E293B] bg-[#020817] text-white rounded-md px-4 py-2">
                         <SelectValue placeholder="Select status" />
                       </SelectTrigger>
@@ -153,7 +159,7 @@ const AddCard = ({ setAddOpen }: { setAddOpen: React.Dispatch<React.SetStateActi
               </div>
             </div>
             <div className="w-full flex justify-end mt-4">
-              <Button variant="addnew" onClick={() => createTask()}>Create Task</Button>
+              <Button variant="addnew" onClick={() => updatedTask()}>Update</Button>
             </div>
           </div>
         </div>
@@ -163,4 +169,4 @@ const AddCard = ({ setAddOpen }: { setAddOpen: React.Dispatch<React.SetStateActi
   )
 }
 
-export default AddCard
+export default EditCard

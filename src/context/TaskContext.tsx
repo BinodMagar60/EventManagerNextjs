@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import z from 'zod'
 export interface ITasks {
     id?: string,
-    title: string | null,
+    title: string,
     description: string,
     category: "Work" | "Personal" | "Health" | "Education" | "Other",
     priority: "Low" | "Medium" | "High",
@@ -17,6 +17,9 @@ export interface ITasks {
 type TaskContextType = {
     tasks: ITasks[],
     addTask: (data: ITasks) => boolean,
+    changeCompletedStatus: (id: string) => void,
+    handleDelete: (id: string) => void,
+    updateTask: (data: ITasks) => boolean
 }
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined)
@@ -32,6 +35,17 @@ const taskAddValidation = z.object({
     dueDate: z.string({ required_error: "Date error" }),
 })
 
+
+const taskUpdateValidation = z.object({
+    id: z.string(),
+    title: z
+        .string({ required_error: "Title Required" })
+        .nonempty("Title cannot be empty"),
+    category: z.enum(["Work", "Personal", "Health", "Education", "Other"]),
+    priority: z.enum(["Low", "Medium", "High"]),
+    status: z.enum(["Pending", "In Progress", "Completed"]),
+    dueDate: z.string({ required_error: "Date error" }),
+})
 
 
 
@@ -74,8 +88,50 @@ export const TaskProvider = ({ children }: { children: React.ReactNode }) => {
         return true
     }
 
+    const changeCompletedStatus = (id:string) => {
+        const newData: ITasks[] = tasks.map(item => {
+            if(item.id === id){
+                return {...item, status: "Completed"}
+            }
+            return item
+        }) 
+        setTasks(newData)
+        localStorage.setItem("localEventTask",JSON.stringify(newData))
+    }
+
+    const updateTask = (data: ITasks) => {
+        const parsed = taskUpdateValidation.safeParse(data)
+        if (!parsed.success) {
+            toast.error("Validation failed. Try again", {
+                duration: 1500,
+            })
+            return false
+        }
+
+
+        const updatedTasks: ITasks[] = tasks.map(item => {
+            if(item.id === data.id){
+                return {
+                    ...data,
+                    updatedAt: new Date().toISOString()
+                }
+            }
+            return item
+        })
+        setTasks(updatedTasks)
+        localStorage.setItem("localEventTask", JSON.stringify(updatedTasks))
+        return true
+    }
+
+    const handleDelete = (id: string) => {
+        const newData: ITasks[] = tasks.filter(item => item.id !== id)
+        setTasks(newData)
+        localStorage.setItem("localEventTask", JSON.stringify(newData))
+    }
+
+
     return (
-        <TaskContext.Provider value={{ tasks, addTask }}>
+        <TaskContext.Provider value={{ tasks, addTask, changeCompletedStatus, handleDelete, updateTask }}>
             {children}
         </TaskContext.Provider>
     )
