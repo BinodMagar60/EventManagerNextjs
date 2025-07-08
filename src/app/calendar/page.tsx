@@ -13,7 +13,7 @@ import { useTaskContext } from "@/context/TaskContext"
 import { format, isSameDay, isSameMonth, parseISO } from "date-fns"
 import Card from "@/components/Card"
 
-const page = () => {
+const Page = () => {
   const { tasks } = useTaskContext()
   const [isEditOpen, setEditOpen] = useState(false)
   const [isAddOpen, setAddOpen] = useState(false)
@@ -129,4 +129,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

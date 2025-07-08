@@ -18,7 +18,7 @@ type TStatus = "All Status" | "Pending" | "In Progress" | "Incomplete" | "Comple
 type TPriority = "All Priority" | "Low" | "Medium" | "High"
 
 
-const page = () => {
+const Page = () => {
   const { tasks } = useTaskContext()
   const [isAddOpen, setAddOpen] = useState(false)
   const [isEditOpen, setEditOpen] = useState(false)
@@ -210,4 +210,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page
