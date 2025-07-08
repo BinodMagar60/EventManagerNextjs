@@ -20,7 +20,7 @@ const EditCard = ({ taskDetail, setEditOpen }: { taskDetail: ITasks | null, setE
   const [date, setDate] = useState<string>(new Date().toISOString())
   const [newFormData, setNewFormData] = useState<ITasks>({
     id: "",
-    title: null,
+    title: "",
     description: "",
     category: "Personal",
     priority: "Medium",
