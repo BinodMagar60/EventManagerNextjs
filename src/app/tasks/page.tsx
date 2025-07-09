@@ -186,7 +186,7 @@ const Page = () => {
         </div>
 
         <div className="text-gray-400 my-4">
-          Showing 4 of {allTasks.length} tasks
+          Showing {filteredPriority.length} of {allTasks.length} tasks
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3">

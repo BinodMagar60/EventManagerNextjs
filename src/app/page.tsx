@@ -180,7 +180,7 @@ export default function Home() {
           <div className="p-5 rounded-md border border-[#1E293B]">
             <div className="text-2xl font-semibold">Task Status Distribution</div>
             <div className="min-h-40 mt-4">
-              <ResponsiveContainer width="100%" height={300}>
+              <ResponsiveContainer width="100%" height={300} >
                 <PieChart>
                   <Pie
                     data={barChartData}
