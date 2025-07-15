@@ -91,7 +91,7 @@ export const TaskProvider = ({ children }: { children: React.ReactNode }) => {
     const changeCompletedStatus = (id:string) => {
         const newData: ITasks[] = tasks.map(item => {
             if(item.id === id){
-                return {...item, status: "Completed"}
+                return {...item, status: item.status === "Completed"? "Pending" : "Completed"}
             }
             return item
         }) 
